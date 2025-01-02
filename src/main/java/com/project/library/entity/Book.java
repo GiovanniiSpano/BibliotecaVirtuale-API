@@ -28,6 +28,16 @@ public class Book {
     @Column(name="IS_AVAILABLE")
     private Boolean isAvailable;
 
+    public Book() {
+    }
+
+    public Book(String title, String author, Integer publishedYear, String genre, Boolean isAvailable) {
+        this.title = title;
+        this.author = author;
+        this.publishedYear = publishedYear;
+        this.genre = genre;
+        this.isAvailable = isAvailable;
+    }
 
     public Integer getId() {
         return this.id;
