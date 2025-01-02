@@ -1,36 +1,27 @@
-package com.project.library;
+package com.project.library.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestController
-public class LibraryController {
+import com.project.library.entity.Book;
+import com.project.library.repository.LibraryRepository;
 
+public class LibraryService {
     final private LibraryRepository libraryRepository;
 
-    public LibraryController(final LibraryRepository libraryRepository) {
+    public LibraryService(final LibraryRepository libraryRepository) {
         this.libraryRepository = libraryRepository;
     }
 
-    @GetMapping("/books")
     public Iterable<Book> getAllBooks() {
         return this.libraryRepository.findAll();
     }
 
-    @GetMapping("/books/{id}")
-    public Book getBookById(@PathVariable("id") Integer id) throws ResponseStatusException {
+    public Book getBookById(Integer id) throws ResponseStatusException {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
@@ -40,9 +31,8 @@ public class LibraryController {
         Book book = bookOptional.get();
         return book;
     }
-
-    @GetMapping("/books") 
-    public List<Book> searchBooks(@RequestParam(name="author", required=false) String author, @RequestParam(name="genre", required=false) String genre, @RequestParam(name="isAvailable", required=false) Boolean isAvailable) {
+    
+    public List<Book> searchBooks(String author, String genre, Boolean isAvailable) {
         if (author != null) {
             return this.libraryRepository.findByAuthor(author);
         } else if (genre != null) {
@@ -54,8 +44,7 @@ public class LibraryController {
         }
     }
 
-    @PostMapping("/books/addBook")
-    public Book createBook(@RequestBody Book book) throws ResponseStatusException {
+    public Book createBook(Book book) throws ResponseStatusException {
         Optional<Book> b = this.libraryRepository.findById(book.getId());
 
         if (b.isPresent()) {
@@ -65,8 +54,7 @@ public class LibraryController {
         return this.libraryRepository.save(book);
     }
 
-    @PutMapping("/books/{id}")
-    public Book updateBook(@PathVariable("id") Integer id, @RequestBody Book b) {
+    public Book updateBook(Integer id, Book b) {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
@@ -94,8 +82,7 @@ public class LibraryController {
         return this.libraryRepository.save(book);
     }
 
-    @DeleteMapping("book/{id}")
-    public Book removeBook(@PathVariable("id") Integer id) throws ResponseStatusException {
+    public Book removeBook(Integer id) throws ResponseStatusException {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
