@@ -1,7 +1,8 @@
 package com.project.library.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.project.library.entity.Book;
 import com.project.library.service.LibraryService;
 
+import io.micrometer.common.util.StringUtils;
+
 @RestController
 public class LibraryController {
 
@@ -25,18 +28,17 @@ public class LibraryController {
     }
 
     @GetMapping("/books")
-    public Iterable<Book> getAllBooks() {
-        return this.libraryService.getAllBooks();
+    public Page<Book> getAllBooks(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy) {
+        if (offset == null) offset = 0;
+        if (pageSize == null) pageSize = 10;
+        if (StringUtils.isEmpty(sortBy)) sortBy = "id";
+
+        return libraryService.getBooksPage(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/books/{id}")
     public Book getBookById(@PathVariable("id") Integer id) {
         return this.libraryService.getBookById(id);
-    }
-
-    @GetMapping("/books") 
-    public List<Book> searchBooks(@RequestParam(name="author", required=false) String author, @RequestParam(name="genre", required=false) String genre, @RequestParam(name="isAvailable", required=false) Boolean isAvailable) {
-        return this.libraryService.searchBooks(author, genre, isAvailable);
     }
 
     @PostMapping("/books/addBook")

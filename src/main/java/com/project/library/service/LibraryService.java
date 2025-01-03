@@ -1,15 +1,17 @@
 package com.project.library.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.library.entity.Book;
 import com.project.library.repository.LibraryRepository;
 
+@Service
 public class LibraryService {
     final private LibraryRepository libraryRepository;
 
@@ -17,8 +19,8 @@ public class LibraryService {
         this.libraryRepository = libraryRepository;
     }
 
-    public Iterable<Book> getAllBooks() {
-        return this.libraryRepository.findAll();
+    public Page<Book> getBooksPage(PageRequest pageRequest) {
+        return libraryRepository.findAll(pageRequest);
     }
 
     public Book getBookById(Integer id) throws ResponseStatusException {
@@ -30,18 +32,6 @@ public class LibraryService {
 
         Book book = bookOptional.get();
         return book;
-    }
-    
-    public List<Book> searchBooks(String author, String genre, Boolean isAvailable) {
-        if (author != null) {
-            return this.libraryRepository.findByAuthor(author);
-        } else if (genre != null) {
-            return this.libraryRepository.findByGenre(genre);
-        } else if (isAvailable != null && isAvailable == true) {
-            return this.libraryRepository.findByIsAvailableTrue();
-        } else {
-            return new ArrayList<>();
-        }
     }
 
     public Book createBook(Book book) throws ResponseStatusException {
