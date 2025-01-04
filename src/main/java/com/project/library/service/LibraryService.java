@@ -23,6 +23,18 @@ public class LibraryService {
         return libraryRepository.findAll(pageRequest);
     }
 
+    public Page<Book> getBooksPageByAuthor(PageRequest pageRequest, String author) {
+        return libraryRepository.findByAuthor(pageRequest, author);
+    }
+
+    public Page<Book> getBooksPageByGenre(PageRequest pageRequest, String genre) {
+        return libraryRepository.findByGenre(pageRequest, genre);
+    }
+
+    public Page<Book> getBooksPageByIsAvailableTrue(PageRequest pageRequest) {
+        return libraryRepository.findByIsAvailableTrue(pageRequest);
+    }
+
     public Book getBookById(Integer id) throws ResponseStatusException {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 

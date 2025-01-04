@@ -28,12 +28,20 @@ public class LibraryController {
     }
 
     @GetMapping("/books")
-    public Page<Book> getAllBooks(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy) {
+    public Page<Book> getAllBooks(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy, @RequestParam(value="author", required=false) String author, @RequestParam(value="genre", required=false) String genre, @RequestParam(value="isAvailable", required=false) boolean isAvailable) {
         if (offset == null) offset = 0;
         if (pageSize == null) pageSize = 10;
         if (StringUtils.isEmpty(sortBy)) sortBy = "id";
 
-        return libraryService.getBooksPage(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
+        if (!StringUtils.isEmpty(author) && StringUtils.isEmpty(genre) && !isAvailable) {
+            return this.libraryService.getBooksPageByAuthor(PageRequest.of(offset, pageSize, Sort.by(sortBy)), author);
+        } else if (StringUtils.isEmpty(author) && !StringUtils.isEmpty(genre) && !isAvailable) {
+            return this.libraryService.getBooksPageByGenre(PageRequest.of(offset, pageSize, Sort.by(sortBy)), genre);
+        } else if (StringUtils.isEmpty(author) && StringUtils.isEmpty(genre) && isAvailable) {
+            return this.libraryService.getBooksPageByIsAvailableTrue(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
+        } else {
+            return this.libraryService.getBooksPage(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
+        }
     }
 
     @GetMapping("/books/{id}")
