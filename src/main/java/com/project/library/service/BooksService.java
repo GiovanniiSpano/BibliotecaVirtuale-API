@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.library.entity.Book;
-import com.project.library.repository.LibraryRepository;
+import com.project.library.repository.BooksRepository;
 
 @Service
-public class LibraryService {
-    final private LibraryRepository libraryRepository;
+public class BooksService {
+    final private BooksRepository libraryRepository;
 
-    public LibraryService(final LibraryRepository libraryRepository) {
+    public BooksService(final BooksRepository libraryRepository) {
         this.libraryRepository = libraryRepository;
     }
 

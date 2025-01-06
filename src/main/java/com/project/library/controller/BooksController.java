@@ -15,16 +15,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.project.library.entity.Book;
 import com.project.library.exception.RedirectException;
-import com.project.library.service.LibraryService;
+import com.project.library.service.BooksService;
 
 import io.micrometer.common.util.StringUtils;
 
 @RestController
-public class LibraryController {
+public class BooksController {
 
-    final private LibraryService libraryService;
+    final private BooksService libraryService;
 
-    public LibraryController(final LibraryService libraryService) {
+    public BooksController(final BooksService libraryService) {
         this.libraryService = libraryService;
     }
 
@@ -69,7 +69,7 @@ public class LibraryController {
         return this.libraryService.updateBook(id, b);
     }
 
-    @DeleteMapping("book/{id}")
+    @DeleteMapping("/books/{id}")
     public Book removeBook(@PathVariable("id") Integer id) throws ResponseStatusException {
         return this.libraryService.removeBook(id);
     }
