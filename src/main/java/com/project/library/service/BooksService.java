@@ -39,28 +39,27 @@ public class BooksService {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Libro non trovato");
         }
 
-        Book book = bookOptional.get();
-        return book;
+        return bookOptional.get();
     }
 
     public Book createBook(Book book) throws ResponseStatusException {
-        Optional<Book> b = this.libraryRepository.findById(book.getId());
+        Optional<Book> bookOptional = this.libraryRepository.findByTitle(book.getTitle());
 
-        if (b.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Book already exists");
+        if (bookOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il libro è già presente");
         }
 
         return this.libraryRepository.save(book);
     }
 
-    public Book updateBook(Integer id, Book b) {
+    public Book updateBook(Integer id, Book b) throws ResponseStatusException {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Libro non trovato");
         }
 
         Book book = bookOptional.get();
@@ -88,7 +87,7 @@ public class BooksService {
         Optional<Book> bookOptional = this.libraryRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Libro non trovato");
         }
 
         Book book = bookOptional.get();

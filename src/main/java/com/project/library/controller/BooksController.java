@@ -29,7 +29,7 @@ public class BooksController {
     }
 
     @GetMapping("/books")
-    public Page<Book> getAllBooks(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy, @RequestParam(value="author", required=false) String author, @RequestParam(value="genre", required=false) String genre, @RequestParam(value="isAvailable", required=false) boolean isAvailable) {
+    public Page<Book> getAllBooks(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy) {
         if (offset == null) offset = 0;
         if (pageSize == null) pageSize = 10;
         if (StringUtils.isEmpty(sortBy)) sortBy = "id";
@@ -65,8 +65,8 @@ public class BooksController {
     }
 
     @PutMapping("/books/{id}")
-    public Book updateBook(@PathVariable("id") Integer id, @RequestBody Book b) {
-        return this.libraryService.updateBook(id, b);
+    public Book updateBook(@PathVariable("id") Integer id, @RequestBody Book book) {
+        return this.libraryService.updateBook(id, book);
     }
 
     @DeleteMapping("/books/{id}")

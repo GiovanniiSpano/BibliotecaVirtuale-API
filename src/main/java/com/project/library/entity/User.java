@@ -24,8 +24,8 @@ public class User {
     private Integer id;
 
     @NonNull
-    @Column(name="NAME")
-    private String name;
+    @Column(name="USERNAME", unique=true)
+    private String username;
 
     @JsonIgnore
     @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
@@ -34,12 +34,12 @@ public class User {
     public User() {
     }
 
-    public User(String name) {
-        this.name = name;
+    public User(String username) {
+        this.username = username;
     }
 
-    public User(String name, List<Book> booksBorrowed) {
-        this.name = name;
+    public User(String username, List<Book> booksBorrowed) {
+        this.username = username;
         this.booksBorrowed = booksBorrowed;
     }
 
@@ -52,11 +52,11 @@ public class User {
     }
 
     public String getName() {
-        return this.name;
+        return this.username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String username) {
+        this.username = username;
     }
 
     public List<Book> getBooksBorrowed() {
