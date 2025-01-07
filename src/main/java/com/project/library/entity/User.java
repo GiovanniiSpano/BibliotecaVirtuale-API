@@ -1,5 +1,6 @@
 package com.project.library.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,18 +30,13 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
-    private List<Book> booksBorrowed;
+    private List<Book> booksBorrowed = new ArrayList<>();
 
     public User() {
     }
 
     public User(String username) {
         this.username = username;
-    }
-
-    public User(String username, List<Book> booksBorrowed) {
-        this.username = username;
-        this.booksBorrowed = booksBorrowed;
     }
 
     public Integer getId() {

@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.project.library.entity.Book;
 import com.project.library.entity.User;
 import com.project.library.service.UsersService;
 
 import io.micrometer.common.util.StringUtils;
 
+@RestController
 public class UsersController {
     
     final private UsersService usersService;
@@ -25,7 +28,7 @@ public class UsersController {
     }
 
     @GetMapping("/users") 
-    public Page<User> getAllUsers(@RequestParam(value="offset") Integer offset, @RequestParam(value="pageSize") Integer pageSize, @RequestParam(value="sortBy") String sortBy) {
+    public Page<User> getAllUsers(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy) {
         if (offset == null) offset = 0;
         if (pageSize == null) pageSize = 10;
         if (StringUtils.isEmpty(sortBy)) sortBy = "id";
@@ -36,6 +39,16 @@ public class UsersController {
     @GetMapping("/users/{username}")
     public User getUserByUsername(@PathVariable("username") String username) {
         return this.usersService.getUserByUsername(username);
+    }
+
+    @GetMapping("/users/{id}/assignBook")
+    public Book assignBook(@PathVariable("id") Integer userId, @RequestParam(value="bookId", required=true) Integer bookId) {
+        return this.usersService.assignBook(userId, bookId);
+    }
+
+    @GetMapping("/users/{id}/returnBook")
+    public Book returnBook(@PathVariable("id") Integer userId, @RequestParam(value="bookId", required=true) Integer bookId) {
+        return this.usersService.returnBook(userId, bookId);
     }
 
     @PostMapping("/users/register")

@@ -6,7 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.project.library.entity.Book;
+import com.project.library.entity.User;
 import com.project.library.repository.BooksRepository;
+import com.project.library.repository.UsersRepository;
 
 @SpringBootApplication
 public class LibraryApplication implements CommandLineRunner {
@@ -14,6 +16,8 @@ public class LibraryApplication implements CommandLineRunner {
 	@Autowired
 	BooksRepository booksRepository;
 
+	@Autowired
+	UsersRepository usersRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApplication.class, args);
 	}
@@ -29,7 +33,19 @@ public class LibraryApplication implements CommandLineRunner {
 		};
 
 		for (Book book : books) {
-			booksRepository.save(book);
+			this.booksRepository.save(book);
+		}
+
+		User[] users = new User[] {
+			new User("dicralex"),
+			new User("urbanmario"),
+			new User("jgiota"),
+			new User("hermlos"),
+			new User("gojji")
+		};
+
+		for (User user : users) {
+			this.usersRepository.save(user);
 		}
 	}
 

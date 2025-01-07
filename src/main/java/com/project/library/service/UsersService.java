@@ -8,16 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.project.library.entity.Book;
 import com.project.library.entity.User;
+import com.project.library.repository.BooksRepository;
 import com.project.library.repository.UsersRepository;
 
 @Service
 public class UsersService {
     
     final private UsersRepository usersRepository;
+    final private BooksRepository booksRepository;
 
-    public UsersService(final UsersRepository usersRepository) {
+    public UsersService(final UsersRepository usersRepository, final BooksRepository booksRepository) {
         this.usersRepository = usersRepository;
+        this.booksRepository = booksRepository;
     }
 
     public Page<User> getUsersPage(PageRequest pageRequest) {
@@ -76,5 +80,53 @@ public class UsersService {
         User user = userOptional.get();
         this.usersRepository.delete(user);
         return user;
+    }
+
+    public Book assignBook(Integer userId, Integer bookId) throws ResponseStatusException {
+        Optional<User> userOptional = this.usersRepository.findById(userId);
+        Optional<Book> bookOptional = this.booksRepository.findById(bookId);
+
+        if (!userOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato");
+        }
+        if (!bookOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Libro non trovato");
+        }
+
+        User user = userOptional.get();
+        Book book = bookOptional.get();
+
+        if (book.getIsAvailable() == false) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Libro non disponibile");
+        }
+
+        user.getBooksBorrowed().add(book);
+        book.setIsAvailable(false);
+        book.setUser(user);
+
+        this.usersRepository.save(user);
+        return this.booksRepository.save(book);
+    }
+
+    public Book returnBook(Integer userId, Integer bookId) throws ResponseStatusException {
+        Optional<User> userOptional = this.usersRepository.findById(userId);
+        Optional<Book> bookOptional = this.booksRepository.findById(bookId);
+
+        if (!userOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato");
+        }
+        if (!bookOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Libro non trovato");
+        }
+
+        User user = userOptional.get();
+        Book book = bookOptional.get();
+
+        user.getBooksBorrowed().remove(book);
+        book.setIsAvailable(true);
+        book.setUser(null);
+
+        this.usersRepository.save(user);
+        return this.booksRepository.save(book);
     }
 }
