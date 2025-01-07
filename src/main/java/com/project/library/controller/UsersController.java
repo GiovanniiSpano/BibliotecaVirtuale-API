@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.library.entity.Book;
 import com.project.library.entity.User;
 import com.project.library.service.UsersService;
 
@@ -39,16 +38,6 @@ public class UsersController {
     @GetMapping("/users/{username}")
     public User getUserByUsername(@PathVariable("username") String username) {
         return this.usersService.getUserByUsername(username);
-    }
-
-    @GetMapping("/users/{id}/assignBook")
-    public Book assignBook(@PathVariable("id") Integer userId, @RequestParam(value="bookId", required=true) Integer bookId) {
-        return this.usersService.assignBook(userId, bookId);
-    }
-
-    @GetMapping("/users/{id}/returnBook")
-    public Book returnBook(@PathVariable("id") Integer userId, @RequestParam(value="bookId", required=true) Integer bookId) {
-        return this.usersService.returnBook(userId, bookId);
     }
 
     @PostMapping("/users/register")

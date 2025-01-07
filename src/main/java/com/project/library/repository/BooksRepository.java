@@ -10,7 +10,10 @@ import com.project.library.entity.Book;
 
 public interface BooksRepository extends JpaRepository<Book, Integer> {
     public Optional<Book> findByTitle(String title);
-    public Page<Book> findByAuthor(PageRequest pageRequest, String author);
-    public Page<Book> findByGenre(PageRequest pageRequest, String genre);
-    public Page<Book> findByIsAvailableTrue(PageRequest pageRequest);
+    public Page<Book> findAllByAuthorAndGenre(PageRequest pageRequest, String author, String genre);
+    public Page<Book> findAllByAuthorAndIsAvailableTrue(PageRequest pageRequest, String author);
+    public Page<Book> findAllByGenreAndIsAvailableTrue(PageRequest pageRequest, String genre);
+    public Page<Book> findAllByAuthor(PageRequest pageRequest, String author);
+    public Page<Book> findAllByGenre(PageRequest pageRequest, String genre);
+    public Page<Book> findAllByIsAvailableTrue(PageRequest pageRequest);
 }

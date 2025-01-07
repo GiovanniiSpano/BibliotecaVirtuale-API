@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.project.library.entity.Book;
 import com.project.library.exception.RedirectException;
@@ -22,10 +21,10 @@ import io.micrometer.common.util.StringUtils;
 @RestController
 public class BooksController {
 
-    final private BooksService libraryService;
+    final private BooksService booksService;
 
-    public BooksController(final BooksService libraryService) {
-        this.libraryService = libraryService;
+    public BooksController(final BooksService booksService) {
+        this.booksService = booksService;
     }
 
     @GetMapping("/books")
@@ -34,7 +33,7 @@ public class BooksController {
         if (pageSize == null) pageSize = 10;
         if (StringUtils.isEmpty(sortBy)) sortBy = "id";
 
-        return this.libraryService.getBooksPage(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
+        return this.booksService.getBooksPage(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
     }
 
     @GetMapping("/books/search")
@@ -44,11 +43,17 @@ public class BooksController {
         if (StringUtils.isEmpty(sortBy)) sortBy = "id";
 
         if (!StringUtils.isEmpty(author) && StringUtils.isEmpty(genre) && !isAvailable) {
-            return this.libraryService.getBooksPageByAuthor(PageRequest.of(offset, pageSize, Sort.by(sortBy)), author);
+            return this.booksService.getBooksPageByAuthor(PageRequest.of(offset, pageSize, Sort.by(sortBy)), author);
+        } else if (!StringUtils.isEmpty(author) && !StringUtils.isEmpty(genre) && !isAvailable) {
+            return this.booksService.getBooksPageByAuthorAndGenre(PageRequest.of(offset, pageSize, Sort.by(sortBy)), author, genre);
+        } else if (!StringUtils.isEmpty(author) && StringUtils.isEmpty(genre) && isAvailable) {
+            return this.booksService.getBooksPageByAuthorAndIsAvailableTrue(PageRequest.of(offset, pageSize, Sort.by(sortBy)), author);
+        } else if (StringUtils.isEmpty(author) && !StringUtils.isEmpty(genre) && isAvailable) {
+            return this.booksService.getBooksPageByGenreAndIsAvailableTrue(PageRequest.of(offset, pageSize, Sort.by(sortBy)), genre);
         } else if (StringUtils.isEmpty(author) && !StringUtils.isEmpty(genre) && !isAvailable) {
-            return this.libraryService.getBooksPageByGenre(PageRequest.of(offset, pageSize, Sort.by(sortBy)), genre);
+            return this.booksService.getBooksPageByGenre(PageRequest.of(offset, pageSize, Sort.by(sortBy)), genre);
         } else if (StringUtils.isEmpty(author) && StringUtils.isEmpty(genre) && isAvailable) {
-            return this.libraryService.getBooksPageByIsAvailableTrue(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
+            return this.booksService.getBooksPageByIsAvailableTrue(PageRequest.of(offset, pageSize, Sort.by(sortBy)));
         } else {
             throw new RedirectException("/books");
         }
@@ -56,21 +61,21 @@ public class BooksController {
 
     @GetMapping("/books/{id}")
     public Book getBookById(@PathVariable("id") Integer id) {
-        return this.libraryService.getBookById(id);
+        return this.booksService.getBookById(id);
     }
 
     @PostMapping("/books/addBook")
     public Book createBook(@RequestBody Book book) {
-        return this.libraryService.createBook(book);
+        return this.booksService.createBook(book);
     }
 
     @PutMapping("/books/{id}")
     public Book updateBook(@PathVariable("id") Integer id, @RequestBody Book book) {
-        return this.libraryService.updateBook(id, book);
+        return this.booksService.updateBook(id, book);
     }
 
     @DeleteMapping("/books/{id}")
-    public Book removeBook(@PathVariable("id") Integer id) throws ResponseStatusException {
-        return this.libraryService.removeBook(id);
+    public Book removeBook(@PathVariable("id") Integer id) {
+        return this.booksService.removeBook(id);
     }
 }

@@ -36,8 +36,12 @@ public class Book {
     private Integer publishedYear;
 
     @NonNull
+    @Column(name="NUM_AVAILABLE")
+    private Integer numAvailable = 1;
+
+    @NonNull
     @Column(name="IS_AVAILABLE")
-    private Boolean isAvailable;    
+    private Boolean isAvailable = true;    
 
     @ManyToOne(optional=true)
     @JoinColumn(name = "USER_ID", referencedColumnName="ID")
@@ -46,21 +50,11 @@ public class Book {
     public Book() {
     }
 
-    public Book(String title, String author, String genre, Integer publishedYear, Boolean isAvailable) {
+    public Book(String title, String author, String genre, Integer publishedYear) {
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.publishedYear = publishedYear;
-        this.isAvailable = isAvailable;
-    }
-
-    public Book(String title, String author, String genre, Integer publishedYear, Boolean isAvailable, User user) {
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.publishedYear = publishedYear;
-        this.isAvailable = isAvailable;
-        this.user = user;
     }
 
     public Integer getId() {
@@ -103,6 +97,14 @@ public class Book {
         this.publishedYear = publishedYear;
     }
 
+    public Integer getNumAvailable() {
+        return this.numAvailable;
+    }
+
+    public void setNumAvailable(Integer numAvailable) {
+        this.numAvailable = numAvailable;
+    }
+
     public Boolean isIsAvailable() {
         return this.isAvailable;
     }
@@ -112,6 +114,10 @@ public class Book {
     }
 
     public void setIsAvailable(Boolean isAvailable) {
+        if (this.numAvailable == 0) {
+            this.isAvailable = false;
+        }
+
         this.isAvailable = isAvailable;
     }
 

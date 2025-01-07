@@ -25,11 +25,11 @@ public class LibraryApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Book[] books = new Book[] {
-				new Book("Il Buio Oltre la Siepe", "Harper Lee", "Narrativa", 1960, true),
-				new Book("1984", "George Orwell", "Distopico", 1949, false),
-				new Book("Il Grande Gatsby", "F. Scott Fitzgerald", "Classico", 1925, true),
-				new Book("Il Giovane Holden", "J.D. Salinger", "Classico", 1951, true),
-				new Book("Il Mondo Nuovo", "Aldous Huxley", "Distopico", 1932, false)
+				new Book("Il Buio Oltre la Siepe", "Harper Lee", "Narrativa", 1960),
+				new Book("1984", "George Orwell", "Distopico", 1949),
+				new Book("Il Grande Gatsby", "F. Scott Fitzgerald", "Classico", 1925),
+				new Book("Il Giovane Holden", "J.D. Salinger", "Classico", 1951),
+				new Book("Il Mondo Nuovo", "Aldous Huxley", "Distopico", 1932)
 		};
 
 		for (Book book : books) {
