@@ -27,6 +27,11 @@ public class BooksController {
         this.booksService = booksService;
     }
 
+    @GetMapping("/")
+    public void redirectToBooks() throws RedirectException {
+        throw new RedirectException("/books");
+    }
+
     @GetMapping("/books")
     public Page<Book> getAllBooks(@RequestParam(value="offset", required=false) Integer offset, @RequestParam(value="pageSize", required=false) Integer pageSize, @RequestParam(value="sortBy", required=false) String sortBy) {
         if (offset == null) offset = 0;
